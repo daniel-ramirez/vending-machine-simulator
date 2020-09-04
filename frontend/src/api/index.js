@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:4000";
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:4000";
 
 // Request interceptor
 axios.interceptors.request.use(
@@ -25,23 +25,23 @@ axios.interceptors.response.use(
   }
 );
 
-export const apiRequest = (requestData, routerHistory, meta) => (dispatch) => {
+export const apiRequest = (requestData, routerHistory, meta) => dispatch => {
   // Mapping request parameters
   const reqConfig = {
     url: meta.endpoint,
     method: meta.method,
     baseURL: BACKEND_URL,
-    data: requestData,
+    data: requestData
   };
   // setTimeout(() => {
   // Making request to API server
   axios
     .request(reqConfig)
-    .then((response) => {
+    .then(response => {
       // Dispatch action after successful API call
       dispatch({
         type: meta.onSuccessAction,
-        payload: response.data,
+        payload: response.data
       });
 
       // TODO: Think about how to decouple the dispatch of actions from the API call function
@@ -54,7 +54,7 @@ export const apiRequest = (requestData, routerHistory, meta) => (dispatch) => {
       // Redirect to route if provided by the action creator
       meta.redirectRoute && routerHistory.push(meta.redirectRoute);
     })
-    .catch((error) => {
+    .catch(error => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -84,28 +84,28 @@ export const apiWithNextActions = ({
   requestData,
   meta,
   nextActions,
-  nextActionData,
-}) => (dispatch) => {
+  nextActionData
+}) => dispatch => {
   // Mapping request parameters
   const requestConfig = {
     url: meta.endpoint,
     method: meta.method,
     baseURL: BACKEND_URL,
-    data: requestData,
+    data: requestData
   };
 
   axios
     .request(requestConfig)
-    .then((response) =>
+    .then(response =>
       dispatch(
         nextActions.onSuccess({
           response,
           callbackInfo: requestData,
-          nextActionData,
+          nextActionData
         })
       )
     )
-    .catch((error) => {
+    .catch(error => {
       // handle error logic
       console.error("API error:", JSON.stringify(error, null, 4));
       dispatch(nextActions.onFailure({ error }));
@@ -120,13 +120,13 @@ export const apiWithNextActions = ({
 export const apiFromComponents = ({ requestData }) => {
   const requestConfig = {
     ...requestData,
-    baseURL: BACKEND_URL,
+    baseURL: BACKEND_URL
   };
 
   return axios
     .request(requestConfig)
-    .then((response) => response)
-    .catch((err) => {
+    .then(response => response)
+    .catch(err => {
       throw err;
     });
 };
@@ -138,7 +138,7 @@ export const apiFromComponents = ({ requestData }) => {
  */
 export const requestConfigWithHeaders = () => {
   const requestConfig = {
-    baseURL: BACKEND_URL,
+    baseURL: BACKEND_URL
   };
 
   return requestConfig;
