@@ -9,20 +9,20 @@ mongoose
     "mongodb+srv://testing:admin$1@testingcluster.iz1bz.mongodb.net/vending_machine?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     }
   )
   .then(() => {
     console.log("Connected to the database!");
   })
-  .catch((err) => {
+  .catch(err => {
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
 
 const app = express();
-const hostname = "127.0.0.1";
-const port = 4000;
+const hostname = process.env.HOST || "localhost";
+const port = process.env.PORT || 4000;
 
 // Middlewares
 app.use(cors());
