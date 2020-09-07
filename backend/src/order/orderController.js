@@ -20,9 +20,11 @@ const getOrder = async (req, res) => {
 };
 
 const addOrder = async (req, res) => {
+  console.log("get into addOrder");
+
   const body = {
     ...req.body,
-    order_number: await getNextSequence("order_number"),
+    order_number: await getNextSequence("order_number")
   };
 
   const order = new Order(body);
@@ -57,13 +59,10 @@ const removeOrder = async (req, res) => {
 };
 
 const deliveryOrder = async (req, res) => {
+  console.log("get into deliveryOrder");
   try {
     const order = await Order.findById(req.params.id);
     console.log(Date.now() + " Order: " + order.order_number);
-
-    // preparing order to delivery
-    console.log(Date.now() + " Preparing order to delivery");
-    await sleep(order.total_processing_time);
 
     console.log(Date.now() + " Order delivered");
     const updatedOrder = await Order.updateOne(
@@ -71,8 +70,8 @@ const deliveryOrder = async (req, res) => {
       {
         $set: {
           status: "D",
-          delivery_date: Date.now(),
-        },
+          delivery_date: Date.now()
+        }
       }
     );
     res.json(updatedOrder);
@@ -81,7 +80,7 @@ const deliveryOrder = async (req, res) => {
   }
 };
 
-const getNextSequence = async (name) => {
+const getNextSequence = async name => {
   var ret = await Sequence.findOneAndUpdate(
     { _id: name },
     { $inc: { seq: 1 } },
@@ -91,8 +90,8 @@ const getNextSequence = async (name) => {
   return ret.seq;
 };
 
-const sleep = (waitTimeInMs) =>
-  new Promise((resolve) => setTimeout(resolve, waitTimeInMs * 1000));
+const sleep = waitTimeInMs =>
+  new Promise(resolve => setTimeout(resolve, waitTimeInMs * 1000));
 
 module.exports.getOrders = getOrders;
 module.exports.getOrder = getOrder;

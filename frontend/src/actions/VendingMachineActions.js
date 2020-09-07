@@ -4,16 +4,16 @@ import { showNotification } from "../components/Common/Notifications";
 import {
   FETCH_VENDING_MACHINE_ITEMS,
   FETCH_VENDING_MACHINE_ITEMS_SUCCESS,
-  FETCH_VENDING_MACHINE_ITEMS_ERROR,
+  FETCH_VENDING_MACHINE_ITEMS_ERROR
 } from "./actionTypes";
 
 let notificationsReference = {};
 
-export const updateNotificationReference = ({ reference }) => (dispatch) => {
+export const updateNotificationReference = ({ reference }) => dispatch => {
   notificationsReference = reference;
 };
 
-export const fetchVendingMachines = () => (dispatch) => {
+export const fetchVendingMachines = () => dispatch => {
   // Dispatch action to show spinner
   dispatch(showSpinner());
 
@@ -22,35 +22,35 @@ export const fetchVendingMachines = () => (dispatch) => {
 
   const meta = {
     endpoint: "/items",
-    method: "get",
+    method: "get"
   };
 
   const nextActions = {
     onSuccess: fetchVendingMachinesSuccess,
-    onFailure: fetchVendingMachinesError,
+    onFailure: fetchVendingMachinesError
   };
 
   dispatch(apiWithNextActions({ meta, nextActions }));
 };
 
-export const fetchVendingMachinesSuccess = ({ response }) => (dispatch) => {
+export const fetchVendingMachinesSuccess = ({ response }) => dispatch => {
   // Dispatch action to hide spinner
   dispatch(hideSpinner());
 
   dispatch(
     showNotification({
       notificationsReference,
-      message: `Items load successfully`,
+      message: `Items load successfully`
     })
   );
 
   dispatch({
     type: FETCH_VENDING_MACHINE_ITEMS_SUCCESS,
-    payload: { items: response.data },
+    payload: { items: response.data }
   });
 };
 
-export const fetchVendingMachinesError = ({ error }) => (dispatch) => {
+export const fetchVendingMachinesError = ({ error }) => dispatch => {
   // Dispatch action to hide spinner
   dispatch(hideSpinner());
 
@@ -58,7 +58,7 @@ export const fetchVendingMachinesError = ({ error }) => (dispatch) => {
     showNotification({
       notificationsReference,
       message: `Error loading items`,
-      appearance: "error",
+      appearance: "error"
     })
   );
 
